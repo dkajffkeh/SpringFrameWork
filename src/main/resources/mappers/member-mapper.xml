@@ -3,7 +3,7 @@
 
 <mapper namespace="memberMapper">
 	
-	<resultMap type="Member" id="memberResult">
+	<resultMap type="Member" id="memberResultSet">
 	
 	<result column="USER_ID" property="userId"/>
 	<result column="USER_PWD" property="userPwd"/>
@@ -13,12 +13,15 @@
 	<result column="AGE" property="age"/>
 	<result column="PHONE" property="phone"/>
 	<result column="ADDRESS" property="address"/>
+	<result column="ENROLL_DATE" property="enrollDate"/>
+	<result column="MODIFY_DATE" property="modiftDate"/>
+	<result column="STATUS" property="status"/>
 	
 	</resultMap>
 
 	<select id="loginMember"
 		    parameterType="Member"
-			resultMap="memberResult">	
+			resultMap="memberResultSet">	
   SELECT
          USER_ID
         ,USER_PWD
@@ -28,14 +31,42 @@
         ,AGE
         ,PHONE
         ,ADDRESS
+        ,ENROLL_DATE
+        ,MODIFY_DATE
+        ,STATUS
     FROM
         MEMBER
    WHERE
         USER_ID=#{userId}
-     AND 
-        USER_PWD=#{userPwd}
      AND  
         STATUS='Y'
 	</select>
+	<insert id="insertMember"
+	        parameterType="Member">
+	 	INSERT
+	 		  INTO MEMBER
+	 		  			(
+						 USER_ID
+						,USER_PWD
+						,USER_NAME
+						,EMAIL
+						,GENDER
+						,AGE
+						,PHONE
+						,ADDRESS
+						)
+				VALUES
+				(
+				 #{userId}
+			    ,#{userPwd}
+				,#{userName}
+				,#{email}
+				,#{gender}
+				,#{age}
+				,#{phone}
+				,#{address}
+				)		
+	
+	</insert>
 	
 </mapper>

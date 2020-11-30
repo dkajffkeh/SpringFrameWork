@@ -179,14 +179,32 @@
 	      <version>1.4</version>
 	  </dependency>
 		  
-			  
-			  
-			  
-		      
-      
-      
-      
-      
+	  <!-- 롬복 라이브러리 추가  -->
+  	  <dependency>
+	     <groupId>org.projectlombok</groupId>
+	     <artifactId>lombok</artifactId>
+	     <version>1.18.12</version>
+	     <scope>provided</scope>
+	  </dependency>
+	  
+	  <!-- 스프링 시큐리티 라이브러리 추가 -->
+	   <dependency>
+	    <groupId>org.springframework.security</groupId>
+	    <artifactId>spring-security-core</artifactId>
+	    <version>5.2.0.RELEASE</version>
+	   </dependency>
+	   
+	   <dependency>
+	    <groupId>org.springframework.security</groupId>
+	    <artifactId>spring-security-web</artifactId>
+	    <version>5.2.0.RELEASE</version>
+	   </dependency>
+	   
+	   <dependency>
+	    <groupId>org.springframework.security</groupId>
+	    <artifactId>spring-security-config</artifactId>
+	    <version>5.2.0.RELEASE</version>
+	   </dependency> 	  
       
    </dependencies>
    

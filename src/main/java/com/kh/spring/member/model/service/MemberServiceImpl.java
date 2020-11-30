@@ -17,18 +17,10 @@ public class MemberServiceImpl implements MemberService {
 	private MemberDao mDao;
 
 	@Override
-	public Member loginMember(Member m) {
-		
-		Member loginUser = mDao.loginMember(sqlSession,m);
-		
-		return loginUser;
-	}
+	public Member loginMember(Member m) {return mDao.loginMember(sqlSession,m);}
 
 	@Override
-	public int insertMember(Member m) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public int insertMember(Member m)   {return mDao.insertMember(sqlSession,m);}
 
 	@Override
 	public int updateMember(Member m) {

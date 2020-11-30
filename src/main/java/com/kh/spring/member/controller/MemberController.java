@@ -1,13 +1,14 @@
 package com.kh.spring.member.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberService;
-import com.kh.spring.member.model.service.MemberServiceImpl;
 import com.kh.spring.member.model.vo.Member;
 
 @Controller() //빈으로 등록 까먹으면 안됨  //빈 스캐닝을 통해 자동으로 빈으로 등록이됨.
@@ -15,6 +16,8 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService mService;
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
 	// *요청시 전달값(파라미터) 를 뽑는방법 처'리방법
 	// 1. HttpServletRequest 객체를 통해서 전송받기 (기존의 jsp/servlet 때의 방식) 
@@ -50,26 +53,86 @@ public class MemberController {
 	 *   setter 메소드로 값을 주입해줌
 	 *   (반드시 name 속성값을 필드명으로 제시해야함)
 	 */	 
+	/*
+	 * @RequestMapping("login.me") public void loginMember(Member m, HttpSession
+	 * session) {
+	 * 
+	 * //MemberService mService = new MemberServiceImpl(); //직접 객체 생성하는 순간 => 결합도가
+	 * 높아지게됨. //결합도가 높을때 발생할 수 있는 문제 //==> 유지보수가 어려워짐, //==> 클래스 명이 변경됐을경우 ==> 에러발생
+	 * //==>** 10000번 실행됐을시 10000번의 객체가 생성됨
+	 * 
+	 * //위의 문제점을 해소하고자 한다면 결합도를 낮춰야함!
+	 * 
+	 * //스프링컨테이너가 해당 객체를 관리할 수 있더록 빈으로 등록 //1.xml 등록 2.어노테이션 등록 //DI(의존성 주입을 통해서 생성된
+	 * 객체 받아다 쓸것.) Member loginUser = mService.loginMember(m);
+	 * 
+	 * if(loginUser!=null) { session.setAttribute("loginUser", loginUser); } else {
+	 * 
+	 * }
+	 * 
+	 * // 포워딩방법.
+	 * 
+	 * }
+	 */
+	
+	//1. Model 이라는 객체를 사용 Default Scope => request 응답 데이터를 맵 형식으로 담게됨. (addAttribute("key",value)
+	//2. ModelAndView 객체 사용 포워딩할 뷰에 대한 정보를 담을 수 있는 공간.
+	//   Model 과 View 객체를 합쳐놓은것. 응답페이지에 대한 정보도 담을 수 있는 공간
 	@RequestMapping("login.me")
-	public void loginMember(Member m) {
-		
-		//MemberService mService = new MemberServiceImpl();
-		//직접 객체 생성하는 순간  => 결합도가 높아지게됨.
-		//결합도가 높을때 발생할 수 있는 문제 
-		//==> 유지보수가 어려워짐,
-		//==> 클래스 명이 변경됐을경우 ==> 에러발생
-		//==>** 10000번 실행됐을시 10000번의 객체가 생성됨
-		
-		//위의 문제점을 해소하고자 한다면 결합도를 낮춰야함!
-		
-		//스프링컨테이너가 해당 객체를 관리할 수 있더록 빈으로 등록
-		//1.xml 등록 2.어노테이션 등록
-		//DI(의존성 주입을 통해서 생성된 객체 받아다 쓸것.)
-		Member loginUser = mService.loginMember(m);
+	public ModelAndView loginMember(Member m, HttpSession session , ModelAndView mv) {
 		
 		
+		Member loginUser = mService.loginMember(m); //db로 부터 아이디를 가지고 조회 했을때에 암호문이 담겨있음.
 		
+		// loginUser.getUserPwd() == 디비로부터 아이디를 가지고 조회 했을떄 암호문.
+		//m.getUserPwd() == 로그인 요청시 입력했던 비밀번호 평문.
+				
+		
+		if(loginUser != null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) { //성공
+			
+			session.setAttribute("loginUser", loginUser);
+			mv.setViewName("redirect:/");
+			
+		}else { //실패
+			
+			mv.addObject("errorMsg", "로그인실패");
+			mv.setViewName("common/errorPage");
+			
+		}
+		//여기서 리턴된 문자열의 앞에서 /WEB-INF/views 가 붙고 뒤에는 .jsp가 붙어서 리턴됨
+		return mv;
 	}
 	
+	@RequestMapping("logout.me")
+	public String logoutMember(HttpSession session) {
+		
+		session.invalidate();
+
+		return "redirect:/";
+	}
+	@RequestMapping("enrollForm.me")
+	public String enrollForm() {	
+		
+		return "member/memberEnrollForm";
+	}
+	
+	@RequestMapping("insert.me")
+	public ModelAndView insertMember(Member m , ModelAndView mv) {
+		
+		m.setUserPwd(bcryptPasswordEncoder.encode(m.getUserPwd()));
+		
+		int result = mService.insertMember(m);
+		
+		if(result>0) {
+			
+			mv.setViewName("redirect:/");
+			
+		} else {
+			mv.addObject("errorMag", "회원가입 실패");
+			mv.setViewName("common/errorPage");
+			
+		}
+		return mv;
+	}
 	
 }

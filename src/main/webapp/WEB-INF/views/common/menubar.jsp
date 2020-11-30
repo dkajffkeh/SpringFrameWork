@@ -29,8 +29,8 @@
         float:left;
     }
     #header_1_left{width:30%;position:relative;}
-    #header_1_center{width:40%;}
-    #header_1_right{width:30%;}
+    #header_1_center{width:30%;}
+    #header_1_right{width:40%;}
 
     #header_1_left>img{height:80%;position:absolute;margin:auto;top:0;bottom:0;right: 0;left:0;}
     #header_1_right{text-align: center; line-height:35px; font-size: 12px; text-indent: 35px;}
@@ -74,14 +74,14 @@
                 <c:choose>
                 
                 <c:when test="${ empty loginUser }">
-                <a href="">회원가입</a> | 
+                <a href="enrollForm.me">회원가입</a> | 
                 <a data-toggle="modal" data-target="#loginModal">로그인</a> <!-- 모달의 원리 : 이 버튼 클릭시 data-target에 제시되어있는 해당 아이디의 div가 보이는 거임 -->
                 </c:when>
                 
                 <c:otherwise>
-                <label>xxx님 환영합니다</label> &nbsp;&nbsp;
+                <label>${ loginUser.userName }님 환영합니다</label> &nbsp;&nbsp;
                 <a href="">마이페이지</a>
-                <a href="">로그아웃</a>
+                <a href="logout.me">로그아웃</a>
                 </c:otherwise>
                 
                </c:choose>
