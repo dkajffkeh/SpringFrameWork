@@ -23,16 +23,10 @@ public class MemberServiceImpl implements MemberService {
 	public int insertMember(Member m)   {return mDao.insertMember(sqlSession,m);}
 
 	@Override
-	public int updateMember(Member m) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public int updateMember(Member m) {return mDao.updateMember(sqlSession,m);}
 
 	@Override
-	public int deleteMember(Member m) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public int deleteMember(Member m) {return mDao.deleteMember(sqlSession,m);}
 
 	@Override
 	public int idCheck(String userId) {

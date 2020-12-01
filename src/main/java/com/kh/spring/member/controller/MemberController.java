@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -110,14 +111,9 @@ public class MemberController {
 
 		return "redirect:/";
 	}
-	@RequestMapping("enrollForm.me")
-	public String enrollForm() {	
-		
-		return "member/memberEnrollForm";
-	}
 	
 	@RequestMapping("insert.me")
-	public ModelAndView insertMember(Member m , ModelAndView mv) {
+	public ModelAndView insertMember(Member m , ModelAndView mv, HttpSession session ) {
 		
 		m.setUserPwd(bcryptPasswordEncoder.encode(m.getUserPwd()));
 		
@@ -125,14 +121,70 @@ public class MemberController {
 		
 		if(result>0) {
 			
+			//포워딩으로 처리하는것은 url 을 바꿔치기 하기 위함 update 가 끝났으면 myPage.me 로 바껴야함.
+			session.setAttribute("alertMsg", "회원가입에 성공하였습니다");
 			mv.setViewName("redirect:/");
 			
 		} else {
-			mv.addObject("errorMag", "회원가입 실패");
+			mv.addObject("errorMsg", "회원가입 실패");
 			mv.setViewName("common/errorPage");
 			
 		}
 		return mv;
 	}
+	@RequestMapping("update.me")
+	public ModelAndView updateMember(Member m, ModelAndView mv , HttpSession session) {
+		
+		int result = mService.updateMember(m);
+		
+		if(result>0) {
+
+			session.setAttribute("loginUser", mService.loginMember(m));
+			mv.setViewName("redirect:myPage.me");
+			
+		} else {
+			
+			mv.addObject("errorMsg", "오류가 발생하였습니다");
+			mv.setViewName("common/errorPage");
+			
+		}
+
+		return mv;
+	}
+	
+	@RequestMapping("delete.me")
+	public String deleteMember(String userPwd , Model model ,HttpSession session) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+
+		String encPwd = loginUser.getUserPwd(); //로그인한 회원의 암호문이 담겨있음
+		
+		if(bcryptPasswordEncoder.matches(userPwd, encPwd)){ //본인이 맞음
+			
+			int result = mService.deleteMember(loginUser);
+			
+			if(result>0) {
+				session.removeAttribute("loginUser");
+				session.setAttribute("alertMsg", "이용해주셔서 감사합니다");
+				return "redirect:/";
+				
+			} else {
+				model.addAttribute("errorMsg", "오류가 발생하였습니다.");
+				return "common/errorPage";
+			}
+			
+			
+		} else { //본인이 아님			
+			model.addAttribute("errorMsg","비밀번호가 틀렸습니다.");	
+			return "common/errorPage";
+		}
+		
+	}
+	
+	
+	@RequestMapping("myPage.me")
+	public String sendToMypage() {return "member/myPage";}
+	@RequestMapping("enrollForm.me")
+	public String sentToEnrollForm() {return "member/memberEnrollForm";}
 	
 }

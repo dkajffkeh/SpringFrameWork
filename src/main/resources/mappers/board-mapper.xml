@@ -3,4 +3,43 @@
 
 <mapper namespace="boardMapper">
  
+ <resultMap type="Board" id="boardResultSet">
+ 
+ 	<result column="BOARD_NO" property="boardNo"/>
+ 	<result column="BOARD_TITLE" property="boardTitle"/>
+ 	<result column="BOARD_WRITER" property="boardWriter"/>
+ 	<result column="BOARD_CONTENT" property="boardContent"/>
+ 	<result column="ORIGIN_NAME" property="originName"/>
+ 	<result column="CHANGE_NAME" property="changeName"/>
+ 	<result column="COUNT" property="count"/>
+ 	<result column="CREATE_DATE" property="createDate"/>
+ 	<result column="STATUS" property="status"/>
+ 
+ </resultMap>
+ <select id="selectListCount"
+ 		 resultType="_int"> <!-- result 타입을 항상 기술! -->
+ 	SELECT
+ 		  COUNT(*)
+ 	 FROM
+ 	      BOARD
+ 	 WHERE
+ 	      STATUS = 'Y'          	  
+ </select>	
+ <select id="selectBoardList"
+ 		 resultMap="boardResultSet">
+ 	SELECT
+	      BOARD_NO
+	     ,BOARD_TITLE
+	     ,BOARD_WRITER
+	     ,ORIGIN_NAME
+	     ,COUNT
+	     ,TO_CHAR(CREATE_DATE,'YYYY-MM-DD') CREATE_DATE
+	FROM
+      	  BOARD
+	WHERE 
+          STATUS ='Y'
+  ORDER BY 
+          BOARD_NO DESC
+ </select>
+ 	
 </mapper>

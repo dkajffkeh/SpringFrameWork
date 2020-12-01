@@ -68,5 +68,30 @@
 				)		
 	
 	</insert>
+	<update id="updateMember"
+		    parameterType="Member"
+		    >
+		UPDATE
+      		   MEMBER
+   		   SET
+		       EMAIL = #{email}
+		      ,GENDER = #{gender}
+		      ,AGE = #{age}
+		      ,PHONE = #{phone}
+		      ,ADDRESS = #{address}
+		      ,MODIFY_DATE = SYSDATE
+ 		 WHERE
+  			   USER_ID = #{userId}
+	</update>
+	<update id="deleteMember"
+		    parameterType="Member">
+		UPDATE
+			  MEMBER
+		   SET
+		      STATUS='N'
+		 WHERE
+		      USER_ID= #{userId}     	       
+   
+	</update>
 	
 </mapper>

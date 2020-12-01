@@ -12,6 +12,14 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 <!-- 부트스트랩에서 제공하고 있는 스크립트 -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<!-- JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+<!-- Semantic UI theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css"/>
 <style>
     div{box-sizing: border-box;}
     #header{
@@ -63,6 +71,15 @@
 </head>
 <body>
 
+	<c:if test="${ ! empty alertMsg }">
+		<script>
+			
+		alertify.alert("Message","${alertMsg}");
+		
+		</script>
+		<c:remove var="alertMsg" scope="session"/>
+	</c:if>
+
     <div id="header">
         <div id="header_1">
             <div id="header_1_left">
@@ -80,7 +97,7 @@
                 
                 <c:otherwise>
                 <label>${ loginUser.userName }님 환영합니다</label> &nbsp;&nbsp;
-                <a href="">마이페이지</a>
+                <a href="myPage.me">마이페이지</a>
                 <a href="logout.me">로그아웃</a>
                 </c:otherwise>
                 
@@ -91,7 +108,7 @@
             <ul>
                 <li><a href="">HOME</a></li>
                 <li><a href="">공지사항</a></li>
-                <li><a href="">자유게시판</a></li>
+                <li><a href="list.bo">자유게시판</a></li>
                 <li><a href="">사진게시판</a></li>
             </ul>
         </div>
