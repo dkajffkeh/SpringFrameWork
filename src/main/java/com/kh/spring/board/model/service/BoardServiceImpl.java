@@ -19,38 +19,35 @@ public class BoardServiceImpl implements BoardService {
 	private BoardDao bDao;
 	
 	@Override
-	public int selectListCount() {return bDao.selectListCount(sqlSession);}
+	public int selectListCount() {
+		return bDao.selectListCount(sqlSession);}
 
 	@Override
-	public ArrayList<Board> selectBoardList(PageInfo pi) {return bDao.selectBoardList(sqlSession,pi);}
+	public ArrayList<Board> selectBoardList(PageInfo pi) {
+		return bDao.selectBoardList(sqlSession,pi);}
 
 	@Override
 	public int insertBoard(Board b) {
-		// TODO Auto-generated method stub
-		return 0;
+		return bDao.insertBoard(sqlSession,b);
 	}
 
 	@Override
 	public int increaseCount(int bno) {
-		// TODO Auto-generated method stub
-		return 0;
+		return bDao.increaseCount(sqlSession, bno);
 	}
 
 	@Override
-	public Board selectBoard(int bno) {
-		// TODO Auto-generated method stub
-		return null;
+	public Board selectBoard(int bno) {		
+		return bDao.selectBoard(sqlSession,bno);
 	}
 
 	@Override
 	public int updateBoard(Board b) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int deleteBoard(int bno) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

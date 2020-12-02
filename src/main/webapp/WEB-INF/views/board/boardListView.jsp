@@ -24,6 +24,9 @@
         .select{width:20%;}
         .text{width:53%;}
         .searchBtn{Width:20%;}
+        #boardList>tobody tr:hover{
+        background:lightgrey;
+        }
     </style>
 <body>
     
@@ -37,7 +40,7 @@
             <br>
             <!-- 로그인후 상태일 경우만 보여지는 글쓰기 버튼-->
             <c:if test="${ !empty loginUser }">
-            <a class="btn btn-secondary" style="float:right" href="">글쓰기</a>
+            <a class="btn btn-secondary" style="float:right" href="enrollForm.bo">글쓰기</a>
             </c:if>
             <br>
             <table id="boardList" class="table table-hover" align="center">
@@ -53,7 +56,7 @@
                 </thead>
                 <tbody>
                 <c:forEach var="i" items="${bList}">
-                    <tr>
+                    <tr onclick="sendToDetailBoard('${i.boardNo}')">
                         <td>${i.boardNo}</td>
                         <td>${i.boardTitle} </td>
                         <td>${i.boardWriter} </td>
@@ -70,6 +73,11 @@
                 </tbody>
             </table>
             <br>
+            <script>
+            function sendToDetailBoard(bno){
+            	location.href="detail.bo?bno="+bno;
+            }
+            </script>
 
             <div id="pagingArea">
                 <ul class="pagination">
@@ -87,7 +95,7 @@
                   </c:forEach>
                   
                   <c:choose>
-                  <c:when test="${ currentPage eq pi.maxPage }">
+                  <c:when test="${ pi.currentPage eq pi.endPage }">
                     <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
                     </c:when>
                     <c:otherwise>

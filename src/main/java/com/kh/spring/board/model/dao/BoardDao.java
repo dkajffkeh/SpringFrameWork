@@ -26,4 +26,18 @@ public class BoardDao {
 		return (ArrayList)sqlSession.selectList("boardMapper.selectBoardList", null, rb);
 	}
 
+	public int insertBoard(SqlSessionTemplate sqlSession, Board b) {	
+		return sqlSession.insert("boardMapper.insertBoard",b);
+	}
+
+	public int increaseCount(SqlSessionTemplate sqlSession, int bno) {
+		
+		return sqlSession.update("boardMapper.increaseCount", bno);
+	}
+
+	public Board selectBoard(SqlSessionTemplate sqlSession, int bno) {
+		
+		return sqlSession.selectOne("boardMapper.selectBoard",bno);
+	}
+
 }
