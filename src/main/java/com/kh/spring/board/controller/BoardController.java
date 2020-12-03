@@ -64,6 +64,14 @@ public class BoardController {
 		}
 	
 	}
+	@RequestMapping("modifyform.bo")
+	public String modifyBoard(Board b, MultipartFile upfile, Model model) {
+		
+		
+		return "";
+	}
+		
+	
 			
 	//fileRename
 	public String saveFile(MultipartFile upfile , HttpSession session) {

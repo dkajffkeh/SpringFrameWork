@@ -94,5 +94,8 @@
              STATUS='Y'
           AND
              BOARD_NO=#{bno}            
- </select>	
+ </select>
+ <update id="updateBoard">
+ 	
+ </update>	
 </mapper>

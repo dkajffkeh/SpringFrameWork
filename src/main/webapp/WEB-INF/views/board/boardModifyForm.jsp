@@ -22,24 +22,26 @@
             <h2>게시글 수정하기</h2>
             <br>
 
-            <form id="updateForm" method="post" action="" enctype="">
+            <form id="updateForm" method="post" action="modifyform.bo" enctype="multipart/form-data">
+            	<input type="hidden" name="boardNo" value="${ b.boardNo }">
+            	<input type="hidden" name="originName" value="${ b.originName }">
                 <table align="center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="" value="${ b.boardTitle }" required></td>
+                        <td><input type="text" id="title" class="form-control" name="boardTitle" value="${ b.boardTitle }" required></td>
                     </tr>
                     <tr>
                         <th><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${ b.boardWriter }" name="" readonly></td>
+                        <td><input type="text" id="writer" class="form-control" value="${ b.boardWriter }" name="boardWriter" readonly></td>
                     </tr>
                     <tr>
                         <th><label for="upfile">첨부파일</label></th>
                         <td>
-                            <input type="file" id="upfile" class="form-control-file border" name="">
+                            <input type="file" id="upfile" class="form-control-file border" name="upfile">
   
                             <div>현재 업로드된 파일 : <c:if test="${ b.originName eq null }">없음</c:if>
                         
-                             <a href="" download="">${ b.originName }</a>
+                             <a>${ b.originName }</a>
                     
                             
 
@@ -49,7 +51,7 @@
                         <th colspan="2"><label for="content">내용</label></th>
                     </tr>
                     <tr>
-                        <th colspan="2"><textarea class="form-control" required name="" id="content" rows="10" style="resize:none;">${ b.boardContent }</textarea></th>
+                        <th colspan="2"><textarea class="form-control" required name="boardContent" id="content" rows="10" style="resize:none;">${ b.boardContent }</textarea></th>
                     </tr>
                 </table>
                 <br>

@@ -40,4 +40,5 @@ public class BoardDao {
 		return sqlSession.selectOne("boardMapper.selectBoard",bno);
 	}
 
+
 }
