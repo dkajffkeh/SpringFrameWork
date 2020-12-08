@@ -29,9 +29,6 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteMember(Member m) {return mDao.deleteMember(sqlSession,m);}
 
 	@Override
-	public int idCheck(String userId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public int idCheck(String userId) {return mDao.idCheck(sqlSession,userId);}
 	
 }

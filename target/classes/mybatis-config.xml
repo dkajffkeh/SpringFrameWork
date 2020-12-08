@@ -9,6 +9,7 @@
 	<typeAliases>
 	<typeAlias type="com.kh.spring.member.model.vo.Member" alias="Member"/>
 	<typeAlias type="com.kh.spring.board.model.vo.Board" alias="Board"/>
+	<typeAlias type="com.kh.spring.board.model.vo.Reply" alias="Reply"/>
 	</typeAliases>
 	
 	<!-- DB접속과 관련있는 내용을 여기에 작성 => 하지만 다른곳에서 작성할거 -->

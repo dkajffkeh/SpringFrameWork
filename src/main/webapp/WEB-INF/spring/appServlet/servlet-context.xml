@@ -32,5 +32,16 @@
 	
 	<beans:bean class="org.springfgramework.web.servlet.handler.SimpleUrlHandlerMapping">
 	 -->
+	 
+	 <interceptors>
+	 	<interceptor>
+	 		<mapping path="/myPage.me"/>
+	 		<mapping path="/list.bo"/>
+	 		<mapping path="/detail.bo"/>
+	 		<mapping path="/updateForm.bo"/>
+	 	    <mapping path="/delete.bo"/>
+	 		<beans:bean id="loginIntercepter" class="com.kh.spring.common.intercepter.LoginIntercepter"/>
+	 	</interceptor>
+	 </interceptors>
 	
 </beans:beans>

@@ -16,6 +16,16 @@
  	<result column="STATUS" property="status"/>
  
  </resultMap>
+ 
+ <resultMap type="Reply" id="commentResultSet">
+ 	 <result column="REPLY_NO" property="replyNo"/>
+ 	 <result column="REPLY_CONTENT" property="replyContent"/>
+ 	 <result column="REF_BNO" property="regBno"/>
+ 	 <result column="REPLY_WRITER" property="replyWriter"/>
+ 	 <result column="CREATE_DATE" property="createDate"/>
+ 	 <result column="STATUS" property="status"/>
+ </resultMap>
+ 
  <select id="selectListCount"
  		 resultType="_int"> <!-- result 타입을 항상 기술! -->
  	SELECT
@@ -95,7 +105,43 @@
           AND
              BOARD_NO=#{bno}            
  </select>
- <update id="updateBoard">
- 	
- </update>	
+  <update id="deleteBoard"
+  		  parameterType="_int">
+  	  UPDATE
+  	  	    BOARD
+  	  	 SET
+  	  	    STATUS='N'
+  	   WHERE
+  	        BOARD_NO=#{bno}        	
+  </update>
+  <update id="updateBoard"
+  		  parameterType="Board">
+  	UPDATE
+  		  BOARD
+  	   SET
+  	      BOARD_TITLE =#{boardTitle}
+  	     ,BOARD_CONTENT=#{boardContent}
+  	     ,ORIGIN_NAME=#{originName}
+  	     ,CHANGE_NAME=#{changeName} 	  
+  	 WHERE
+  	      BOARD_NO=#{boardNo}
+
+  </update>	
+  <select id="selectComments"
+  		  parameterType="_int"
+  		  resultMap="commentResultSet">
+  		SELECT
+  			  REPLY_NO
+			 ,REPLY_CONTENT
+			 ,REF_BNO
+			 ,REPLY_WRITER
+			 ,TO_CHAR(CREATE_DATE,'YYYY-MM-DD') "CREATE_DATE"
+			 ,STATUS
+		 FROM
+		 	 REPLY
+		WHERE
+			 REF_BNO=#{bno}
+		  AND
+		     STATUS='Y'	 	 	 
+  </select>
 </mapper>

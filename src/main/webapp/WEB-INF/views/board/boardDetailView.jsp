@@ -61,10 +61,29 @@
             <div align="center">
                 <!-- 수정하기, 삭제하기 버튼은 이글이 본인글일 경우만 보여져야됨 -->
                <c:if test="${ b.boardWriter eq loginUser.userId }"> 
-                <a class="btn btn-primary" href="modify.bo?bno=${ b.boardNo }">수정하기</a>
-                <a class="btn btn-danger" href="">삭제하기</a>
+                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
+                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
                </c:if> 
+               
+               <form action="" method="post" id="postForm">
+               		<input type="hidden" name="bno" value="${ b.boardNo }">
+               		<input type="hidden" name="fileName" value="${ b.changeName }"> 
+               </form>
             </div><br><br>
+            
+            <script>
+            	function postFormSubmit(num){
+         		
+            		let url = "";
+            		if(num==1){ //수정하기 클릭
+            			url="updateForm.bo";
+            		} else if(num==2) { //삭제하기 클릭
+            			url="delete.bo";
+            		}
+            		
+            		$("#postForm").attr("action",url).submit();   		
+            	}
+            </script>
 
             <!-- 댓글 기능은 나중에 ajax 배우고 접목시킬예정! 우선은 화면구현만 해놓음 -->
             <table id="replyArea" class="table" align="center">
@@ -80,21 +99,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>댓글입니다.너무웃기다앙</td>
-                        <td>2020-04-10</td>
-                    </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>많이봐주세용</td>
-                        <td>2020-04-08</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다ㅋㅋㅋ</td>
-                        <td>2020-04-02</td>
-                    </tr>
+                
                 </tbody>
             </table>
         </div>
@@ -103,6 +108,40 @@
 
     <!-- 이쪽에 푸터바 포함할꺼임 -->
     <jsp:include page="../common/footer.jsp"/>
+    
+    <script>
+    	$(function(){
+    		
+    		selectComments();
+    		
+    	});
+    	
+		
+		function selectComments(){
+			
+			$.ajax({
+				url:"selectComment.bo",
+				data:{bno:${b.boardNo}},
+				success:function(cList){				
+					let result = "";
+					
+					for(let i = 0; i<cList.length; i++){
+						result+=`
+								<tr>
+									<td>\${cList[i].replyWriter}</td>
+									<td>\${cList[i].replyContent}</td>
+									<td>\${cList[i].createDate}</td>
+							   </tr>
+						`
+					}
+					$("#replyArea > tbody").html(result);
+					
+				}    				
+				
+			});
+			
+		}
+    </script>
     
 </body>
 </html>

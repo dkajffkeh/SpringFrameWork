@@ -93,5 +93,17 @@
 		      USER_ID= #{userId}     	       
    
 	</update>
+	<!-- input 타잎 parameter-->
+	<!-- output 타잎 resultType -->
+	<select id="idCheck"
+		    parameterType="string" 
+		    resultType="_int"> 
+		SELECT
+			  COUNT(*)
+		  FROM
+		      MEMBER
+		 WHERE
+		      USER_ID=#{userId}    	  
+	</select>
 	
 </mapper>

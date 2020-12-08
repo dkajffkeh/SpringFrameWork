@@ -14,8 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
 import com.kh.spring.common.model.vo.PageInfo;
@@ -64,41 +66,6 @@ public class BoardController {
 		}
 	
 	}
-	@RequestMapping("modifyform.bo")
-	public String modifyBoard(Board b, MultipartFile upfile, Model model) {
-		
-		
-		return "";
-	}
-		
-	
-			
-	//fileRename
-	public String saveFile(MultipartFile upfile , HttpSession session) {
-		
-		//파일 업로드 시킬 폴더의 물리적인 경로(savePath)
-		String savePath = session.getServletContext().getRealPath("resources/uploadFiles/");
-		//어떤 이름으로 업로드 할건지의 수정명 작업.
-		String originName = upfile.getOriginalFilename();
-		
-		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		
-		int random = (int)(Math.random()*90000+10000);
-		String ext = originName.substring(originName.lastIndexOf("."));
-		
-		String changeName = currentTime + random + ext;
-		
-		try {
-		
-			upfile.transferTo(new File(savePath + changeName));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return "resources/uploadFiles/"+changeName;
-	
-	}
 	
 	@RequestMapping("detail.bo")
 	public String sendToDetailView(int bno , Model model) {
@@ -118,17 +85,100 @@ public class BoardController {
 	}
 	
 	}
-	@RequestMapping("modify.bo")
-	public String sentToModifyForm(int bno, Model model) {
+	@RequestMapping("delete.bo")
+	public String delteBoard(int bno , String fileName,HttpSession session , Model model) {
 		
-		Board b = bService.selectBoard(bno);
-		model.addAttribute("b",b);
+		int result = bService.deleteBoard(bno);
+		if(result>0) {//기존 파일 찾아서 삭제 해아함. => 게시글 리스트 페이지 재요청
+			
+			if(!fileName.equals("")) {//파일 존재
+				new File(session.getServletContext().getRealPath(fileName)).delete();	
+			}
+			
+			session.setAttribute("alertMsg", "삭제 완료되었습니다");
+			return "redirect:list.bo";
+		} else {
+			model.addAttribute("errorMsg", "오류가 발생하였습니다");
+			return "common/errorPage";
+		}	
+		
+	}
+	@RequestMapping("updateForm.bo")
+	public String updateBoard(int bno, Model model) {
+			
+		model.addAttribute("b", bService.selectBoard(bno));
+		
 		return "board/boardModifyForm";
 	}
+	@RequestMapping("update.bo")
+	public String updateBoard(Board b, MultipartFile reupfile, HttpSession session , Model model) {
+		
+		
+		if(!reupfile.getOriginalFilename().equals("")) { //새로 전돨된 첨부파일이 있는경우
+			
+			//만약에 기존에 첨부파일이 또 있는경우 => 바꿔치기 & 삭제
+			if(b.getOriginName()!=null) {
+				new File(session.getServletContext().getRealPath(b.getChangeName())).delete();
+			}	
+		 //새로 전달된 첨부파일 => 업로드
+			
+			b.setOriginName(reupfile.getOriginalFilename());
+			b.setChangeName(saveFile(reupfile,session));
+	
+		}
+		
+		int result = bService.updateBoard(b);
+		if(result>0) { //게시글 수정 성공 => 상세보기로 포워딩 
+			
+			session.setAttribute("alertMsg", "등록 성공");
+			return "redirect:detail.bo?bno="+b.getBoardNo();
+		} else { //게시글 수정 실패=>
+			model.addAttribute("errorMsg", "게시글 수정 실패");
+			return "common/errorPage";
+			
+		}
+		
+		
+	}
+	@ResponseBody
+	@RequestMapping(value="selectComment.bo", produces="application/json; charset=utf-8")
+	public String selectComment(int bno) {
+		
+		return new Gson().toJson(bService.selectComments(bno));
+	}
+	
+		
+	//fileRename
+	public String saveFile(MultipartFile upfile , HttpSession session) {
+	
+	//파일 업로드 시킬 폴더의 물리적인 경로(savePath)
+	String savePath = session.getServletContext().getRealPath("resources/uploadFiles/");
+	//어떤 이름으로 업로드 할건지의 수정명 작업.
+	String originName = upfile.getOriginalFilename();
+	
+	String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+	
+	int random = (int)(Math.random()*90000+10000);
+	String ext = originName.substring(originName.lastIndexOf("."));
+	
+	String changeName = currentTime + random + ext;
+	
+	try {
+	
+		upfile.transferTo(new File(savePath + changeName));
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return "resources/uploadFiles/"+changeName;
 
+	}
+	
 	//게시판 등록 포워딩 페이지
 	@RequestMapping("enrollForm.bo")
 	public String sendToEnrollForm() {return "board/boardEnrollForm";}
 	//게시판 상세보기 페이지로 이동
+	
 	
 }

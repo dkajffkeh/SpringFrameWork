@@ -22,9 +22,8 @@
             <h2>게시글 수정하기</h2>
             <br>
 
-            <form id="updateForm" method="post" action="modifyform.bo" enctype="multipart/form-data">
+            <form id="updateForm" method="post" action="update.bo" enctype="multipart/form-data">
             	<input type="hidden" name="boardNo" value="${ b.boardNo }">
-            	<input type="hidden" name="originName" value="${ b.originName }">
                 <table align="center">
                     <tr>
                         <th><label for="title">제목</label></th>
@@ -32,19 +31,20 @@
                     </tr>
                     <tr>
                         <th><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${ b.boardWriter }" name="boardWriter" readonly></td>
+                        <td><input type="text" id="writer" class="form-control" value="${ b.boardWriter }" readonly></td>
                     </tr>
                     <tr>
                         <th><label for="upfile">첨부파일</label></th>
                         <td>
-                            <input type="file" id="upfile" class="form-control-file border" name="upfile">
-  
-                            <div>현재 업로드된 파일 : <c:if test="${ b.originName eq null }">없음</c:if>
+                            <input type="file" id="upfile" class="form-control-file border" name="reupfile">
+  							<c:if test="${! empty b.originName}">
+                            <div>현재 업로드된 파일 : 
                         
-                             <a>${ b.originName }</a>
-                    
-                            
-
+                             <a href="${ b.changeName }" download="${ b.originName }">${ b.originName }</a>
+                             
+                             <input type="hidden" name="originName" value="${ b.originName }">
+            				 <input type="hidden" name="changeName" value="${ b.changeName }">	
+                             </c:if>
                         </td>
                     </tr>
                     <tr>

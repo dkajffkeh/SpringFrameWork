@@ -3,6 +3,7 @@ package com.kh.spring.board.model.service;
 import java.util.ArrayList;
 
 import com.kh.spring.board.model.vo.Board;
+import com.kh.spring.board.model.vo.Reply;
 import com.kh.spring.common.model.vo.PageInfo;
 
 public interface BoardService {
@@ -23,4 +24,6 @@ public interface BoardService {
 	
 	//5. 게시판 삭제용 서비스
 	int deleteBoard(int bno);
+	
+	ArrayList<Reply> selectComments(int bno);
 }
